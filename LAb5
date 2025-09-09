@@ -1,0 +1,70 @@
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.linspace(-10, 10, 400)
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+def sigmoid_derivative(x):
+    s = sigmoid(x)
+    return s * (1 - s)
+def tanh(x):
+    return np.tanh(x)
+def tanh_derivative(x):
+    return 1 - np.tanh(x)**2
+def relu(x):
+    return np.maximum(0, x)
+def relu_derivative(x):
+    return np.where(x > 0, 1, 0)
+def leaky_relu(x):
+    return np.where(x > 0, x, 0.01 * x)
+def leaky_relu_derivative(x):
+    return np.where(x > 0, 1, 0.01)
+def softmax(x):
+    e_x = np.exp(x - np.max(x))
+    return e_x / e_x.sum()
+activations = {
+    'Sigmoid': (sigmoid, sigmoid_derivative),
+    'Tanh': (tanh, tanh_derivative),
+    'ReLU': (relu, relu_derivative),
+    'Leaky ReLU': (leaky_relu, leaky_relu_derivative)
+}
+colors = ['blue', 'orange', 'green', 'red']
+plt.figure(figsize=(14, 10))
+for i, (name, (act_func, der_func)) in enumerate(activations.items(), 1):
+    color = colors[i - 1]
+    plt.subplot(4, 2, 2*i - 1)
+    plt.plot(x, act_func(x), color=color, label=f'{name}')
+    plt.title(f'{name} Activation')
+    plt.legend()
+    plt.grid(True)
+    plt.subplot(4, 2, 2*i)
+    plt.plot(x, der_func(x), color=color, label=f'{name} Derivative')
+    plt.title(f'{name} Derivative (Gradient)')
+    plt.legend()
+    plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+for name, (act_func, _) in activations.items():
+    plt.plot(x, act_func(x), label=name)
+plt.title('Activation Functions')
+plt.legend()
+plt.grid(True)
+plt.subplot(1, 2, 2)
+for name, (_, der_func) in activations.items():
+    plt.plot(x, der_func(x), label=name)
+plt.title('Derivatives of Activation Functions')
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+x_softmax = np.linspace(-2, 2, 10)
+y_softmax = softmax(x_softmax)
+plt.figure(figsize=(6, 4))
+plt.plot(x_softmax, y_softmax, marker='o', color='purple', label='Softmax')
+plt.title('Softmax Output (Vector)')
+plt.grid(True)
+plt.legend()
+plt.show()
